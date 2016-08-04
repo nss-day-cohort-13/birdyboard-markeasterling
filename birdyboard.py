@@ -25,6 +25,12 @@ class Birdyboard:
             self.fullname = input("enter your full name:")
             self.screenname = input("enter your desired screen name:")
             new_user = User(self.fullname, self.screenname)
+            # print(new_user.screen_name)
+            new_user.serialize_user()
+            self.user_list = new_user.deserialize_user()
+            print(self.user_list)
+
+            self.menu()
 
 if __name__ == '__main__':
     birdyboard = Birdyboard()

@@ -10,6 +10,30 @@ class User:
             print(self.unique_user_ID)
             # self.serialize_user()
 
+        def serialize_user(self):
+            try:
+                self.user_dict[self.unique_user_ID] = {"full name": self.full_name, "screen name": self.screen_name}
+                with open('users.txt', "ab+") as f:
+                    pickle.dump(self.user_dict, f)
+                    print("try")
+            except:
+                self.user_dict = {}
+                self.user_dict[self.unique_user_ID] = {"full name": self.full_name, "screen name": self.screen_name}
+                with open('users.txt', "ab+") as f:
+                    pickle.dump(self.user_dict, f)
+                    print("except")
+
+        def deserialize_user(self):
+            self.users = []
+            with open('users.txt', "rb") as f:
+                while 1:
+                    try:
+                        self.users.append(pickle.load(f))
+                    except EOFError:
+                        break
+            return self.users
+
+
 
 if __name__ == '__main__':
     user1 = User("dave", "davesauce")
