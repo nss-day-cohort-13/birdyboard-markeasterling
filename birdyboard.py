@@ -11,7 +11,7 @@ class Birdyboard:
         self.user_list = None
         self.chirp_list = []
         self.conversation_list = []
-        self.current_user = None
+        self.current_user = None # should save as dict object so you can get any of the identifiers from it
         print(self.user_list)
 
     def menu(self):
@@ -27,10 +27,21 @@ class Birdyboard:
             new_user = User(self.fullname, self.screenname)
             # print(new_user.screen_name)
             new_user.serialize_user()
-            self.user_list = new_user.deserialize_user()
-            print(self.user_list)
+            # self.user_list = new_user.deserialize_user()
+            # print(self.user_list)
 
             self.menu()
+
+        if self.selection == "2":
+            self.user_list = User.deserialize_user(self)
+            print("select chirper: ")
+            counter = 1
+            for item in self.user_list:
+                print(str(counter) + ". " + item['screen name'])
+                counter += 1
+            current_user = input("type the number of your chosen chirper: ")
+            self.current_user = self.user_list[int(current_user) - 1]
+            print(self.current_user)
 
 if __name__ == '__main__':
     birdyboard = Birdyboard()
