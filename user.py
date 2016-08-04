@@ -24,11 +24,11 @@ class User:
                     print("except")
 
         def deserialize_user(self):
-            self.users = []
+            self.users = {}
             with open('users.txt', "rb") as f:
-                while 1:
+                while True:
                     try:
-                        self.users.append(pickle.load(f))
+                        self.users.update(pickle.load(f))
                     except EOFError:
                         break
             return self.users
