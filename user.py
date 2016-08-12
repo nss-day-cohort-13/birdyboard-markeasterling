@@ -7,7 +7,7 @@ class User:
         def __init__(self, fullname, screenname):
             self.screen_name = screenname
             self.full_name = fullname
-            self.unique_user_ID = str(uuid.uuid1())
+            self.unique_user_ID = uuid.uuid4().int
             self.user_object = {"uuid": self.unique_user_ID, "full name": self.full_name, "screen name": self.screen_name}
             print(self.unique_user_ID)
             self.serialize_user()

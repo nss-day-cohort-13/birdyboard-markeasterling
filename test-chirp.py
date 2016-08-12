@@ -1,5 +1,7 @@
 import unittest
 from birdyboard import *
+from user import *
+from chirp import *
 
 
 class TestChirp(unittest.TestCase):
@@ -7,31 +9,30 @@ class TestChirp(unittest.TestCase):
     def test_private_chirp_creation(self):
         self.author = User("mike", "mikeyboy")
         self.recipient = User("larry", "scary larry")
-        self.chirp = Chirp(message="hello larry",
-                      author=author.user_ID,
-                      recipient=recipient.user_ID,
-                      private=True
-                          )
+        self.message = "Hello Larry"
+        self.chirp = PrivateChirp(self.message,
+                                  self.author.unique_user_ID,
+                                  self.recipient.unique_user_ID)
 
-        self.assertEqual("hello larry", chirp.message)
-        self.assertEqual(author, author.user_ID)
-        self.assertEqual(recipient, recipient.user_ID)
-        self.assertIsNotNone(chirp.chirp_ID)
-        self.assertIsInstance(chirp, Chirp)
-        self.assertIsNotNone(chirp.chirp_time)
+        self.assertEqual(self.message, self.chirp.message)
+        self.assertEqual(self.chirp.author, self.author.unique_user_ID)
+        self.assertEqual(self.chirp.recipient, self.recipient.unique_user_ID)
+        self.assertIsNotNone(self.chirp.chirp_ID)
+        self.assertIsInstance(self.chirp, PrivateChirp)
+        # self.assertIsNotNone(chirp.chirp_time)
 
     def test_public_chirp_creation(self):
-        author = User("mike", "mikeyboy")
-        recipient = User("larry", "scary larry")
-        chirp = Chirp(message="hello larry",
-                      author=author.user_ID,
-                      private=False
-                      )
-        self.assertEqual("hello larry", chirp.message)
-        self.assertEqual(author, author.user_ID)
-        self.assertIsNotNone(chirp.chirp_ID)
-        self.assertIsInstance(chirp, Chirp)
-        self.assertIsNotNone(chirp.chirp_time)
+        self.author = User("mike", "mikeyboy")
+        # self.recipient = User("larry", "scary larry")
+        self.message = "Hello Larry"
+        self.chirp = PublicChirp(self.message, self.author.unique_user_ID)
+
+
+        self.assertEqual(self.message, self.chirp.message)
+        self.assertEqual(self.chirp.author, self.author.unique_user_ID)
+        self.assertIsNotNone(self.chirp.chirp_ID)
+        self.assertIsInstance(self.chirp, PublicChirp)
+        # self.assertIsNotNone(chirp.chirp_time)
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,6 +3,7 @@ import uuid
 
 from user import *
 # from chirp import *
+from chirp import *
 
 
 class Birdyboard:
@@ -16,8 +17,15 @@ class Birdyboard:
 
     def main_menu(self):
         print("welcome to birdyboard!")
-        print("1. new user")
-        print("2. select user")
+        print("1. New User")
+        print("2. Select User")
+        print("3. View Public Chirps")
+        print("4. View Private Chirps")
+        print("5. New Public Chirp")
+        print("6. New Private Chirp")
+        print("7. Exit Program")
+
+
         self.selection = input("choose the number of your selection, then press enter > ")
 
         if self.selection == "1":
@@ -25,6 +33,19 @@ class Birdyboard:
 
         if self.selection == "2":
             self.show_existing_users()
+
+        if self.selection == "3":
+            self.view_public_chirps()
+
+        if self.selection == "4":
+            self.view_private_chirps()
+
+        if self.selection == "5":
+            self.new_public_chirp()
+
+        if self.selection == "6":
+            self.new_private_chirp()
+
 
     def show_existing_users(self):
         self.user_list = User.deserialize_user(self)
@@ -35,7 +56,8 @@ class Birdyboard:
             counter += 1
         current_user = input("type the number of your chosen chirper: ")
         Birdyboard.current_user = self.user_list[int(current_user) - 1]
-        print("BIRDYBOARD CURRENT USER",Birdyboard.current_user)
+        print("BIRDYBOARD CURRENT USER", Birdyboard.current_user)
+        print("You are now signed in as: " + Birdyboard.current_user["screen name"])
         self.main_menu()
 
     def create_new_user(self):
@@ -44,13 +66,42 @@ class Birdyboard:
         self.screenname = input("enter your desired screen name:")
         new_user = User(self.fullname, self.screenname)
         Birdyboard.current_user = new_user.user_object
-        print("BIRDYBOARD CURRENT USER",Birdyboard.current_user)
+        print("BIRDYBOARD CURRENT USER", Birdyboard.current_user)
+        print("You are now signed in as: " + Birdyboard.current_user["screen name"])
 
         # print(new_user.screen_name)
-
         # self.user_list = new_user.deserialize_user()
         # print(self.user_list)
         self.main_menu()
+
+    def new_public_chirp(self):
+        print("What do you want to chirp?")
+        self.message = input("> ")
+        new_chirp = PublicChirp(self.message, Birdyboard.current_user["uuid"])
+        print("chirp created!")
+        print("")
+        self.main_menu()
+
+    def view_public_chirps(self):
+        self.public_chirp_list = PublicChirp.deserialize_chirp(self)
+        self.user_list = User.deserialize_user(self)
+        # print(self.public_chirp_list)
+        print("type a number to view the conversation")
+        counter = 1
+        for chirp in self.public_chirp_list:
+            for user in self.user_list:
+                if user["uuid"] == chirp["author"]:
+                    print(str(counter)  + ". " + user["screen name"] + ": " + chirp['message'])
+                    counter += 1
+
+
+
+
+
+        # self.main_menu()
+
+
+
 
 if __name__ == '__main__':
     birdyboard = Birdyboard()
