@@ -75,9 +75,28 @@ class Birdyboard:
         self.main_menu()
 
     def new_public_chirp(self):
-        print("What do you want to chirp?")
+        print("What do you want to chirp? (public chirp")
         self.message = input("> ")
         new_chirp = PublicChirp(self.message, Birdyboard.current_user["uuid"])
+        print("chirp created!")
+        print("")
+        self.main_menu()
+
+    def new_private_chirp(self):
+        print("Who do you want to send a chirp?")
+
+        self.user_list = User.deserialize_user(self)
+        print("select chirper: ")
+        counter = 1
+        for item in self.user_list:
+            print(str(counter) + ". " + item['screen name'])
+            counter += 1
+        recipient_position = input("type the number who you'd like to chirp: ")
+        self.recipient = self.user_list[int(recipient_position) - 1]["uuid"]
+
+        print("What do you want to chirp? (private chirp)")
+        self.message = input("> ")
+        new_chirp = PrivateChirp(self.message, Birdyboard.current_user["uuid"], self.recipient, convoID = None)
         print("chirp created!")
         print("")
         self.main_menu()
