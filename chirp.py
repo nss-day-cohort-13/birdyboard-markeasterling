@@ -55,7 +55,7 @@ class PublicChirp:
     def serialize_chirp(self):
 
         with open('publicchirp.txt', "ab+") as f:
-            pickle.dump(PublicChirp.public_chirp_object, f)
+            pickle.dump(self.public_chirp_object, f)
 
 
     def deserialize_chirp(self):

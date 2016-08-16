@@ -13,6 +13,7 @@ class Birdyboard:
         self.chirp_list = []
         self.conversation_list = []
         self.current_user = None # should save as dict object so you can get any of the identifiers from it
+        # self.current_recipient = None
         print(self.user_list)
 
     def main_menu(self):
@@ -55,9 +56,9 @@ class Birdyboard:
             print(str(counter) + ". " + item['screen name'])
             counter += 1
         current_user = input("type the number of your chosen chirper: ")
-        Birdyboard.current_user = self.user_list[int(current_user) - 1]
-        print("BIRDYBOARD CURRENT USER", Birdyboard.current_user)
-        print("You are now signed in as: " + Birdyboard.current_user["screen name"])
+        self.current_user = self.user_list[int(current_user) - 1]
+        print("BIRDYBOARD CURRENT USER", self.current_user)
+        print("You are now signed in as: " + self.current_user["screen name"])
         self.main_menu()
 
     def create_new_user(self):
@@ -65,9 +66,9 @@ class Birdyboard:
         self.fullname = input("enter your full name:")
         self.screenname = input("enter your desired screen name:")
         new_user = User(self.fullname, self.screenname)
-        Birdyboard.current_user = new_user.user_object
-        print("BIRDYBOARD CURRENT USER", Birdyboard.current_user)
-        print("You are now signed in as: " + Birdyboard.current_user["screen name"])
+        self.current_user = new_user.user_object
+        print("BIRDYBOARD CURRENT USER", self.current_user)
+        print("You are now signed in as: " + self.current_user["screen name"])
 
         # print(new_user.screen_name)
         # self.user_list = new_user.deserialize_user()
@@ -112,6 +113,65 @@ class Birdyboard:
                 if user["uuid"] == chirp["author"]:
                     print(str(counter)  + ". " + user["screen name"] + ": " + chirp['message'])
                     counter += 1
+
+
+    def view_private_chirps(self):
+        self.private_chirp_list = PrivateChirp.deserialize_chirp(self)
+        self.user_list = User.deserialize_user(self)
+        self.users_chirps = []
+        print("THIS IS THE CURRENT USER",self.current_user)
+        # print(self.public_chirp_list)
+        print("type a number to view the conversation")
+        counter = 1
+        for chirp in self.private_chirp_list:
+            if chirp["recipient"] == self.current_user["uuid"]:
+                self.users_chirps.append(chirp)
+
+                for chirp in self.users_chirps:
+                    for user in self.user_list:
+                        if user["uuid"] == chirp["author"]:
+                            print(str(counter) + ". " + user["screen name"] + ": " + chirp['message'])
+                            counter += 1
+
+        self.chosen_chirp = int(input("> "))
+        self.chirp_conversation_starter = self.users_chirps[self.chosen_chirp - 1]["convo_ID"]
+        print("THIS WAS THE CHOSEN CHIRP",self.users_chirps[self.chosen_chirp - 1])
+
+        # convo_counter = 1
+        # for chirps in private_chirp_list:
+        #     if chirp["convo_ID"] == self.chirp_conversation_starter:
+        #         for user in self.user_list:
+        #             if user["uuid"] == chirp["author"]:
+        #                     print(str(counter) + ". " + user["screen name"] + ": " + chirp['message'])
+        #                     convo_counter += 1
+
+        print("1. Reply")
+        print("2. Back")
+        self.reply_action = input("> ")
+        if self.reply_action == "1":
+            self.reply_to_private_chirp(self.chirp_conversation_starter, )
+
+        if self.reply_action == "2":
+            self.main_menu()
+
+    def reply_to_private_chirp(self, convoID):
+        self.convo_ID = convoID
+        print("THIS IS THE CONVERSATION ID: ", self.convo_ID)
+        self.private_chirp_list = PrivateChirp.deserialize_chirp(self)
+        self.user_list = User.deserialize_user(self)
+        for chirp in self.private_chirp_list:
+            if chirp["convo_ID"] == self.convo_ID:
+                self.recipient = chirp["recipient"]
+
+        print("What do you want to add to this conversation?")
+        self.reply = input("> ")
+        self.new_reply = PrivateChirp(self.reply, self.current_user["uuid"], self.recipient, self.convo_ID)
+
+
+
+
+
+
 
 
 
